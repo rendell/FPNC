@@ -1,0 +1,42 @@
+---
+title: "FPNC ledger"
+output: html_notebook
+---
+
+#Manipulations to the FPNC's "Ledger" file
+
+
+## Pre-processing
+
+Loading needed libraries
+```{r}
+library(dplyr)
+```
+
+
+Change name of data table to make it a little bit more readable.
+Convert to tibble for easier manipulation.
+```{r}
+data<-read.csv("/cloud/project/FPNC data/Ledger_R_20200830.csv")
+data<- tibble(data)
+```
+
+## Queries
+Which suppliers are requested?
+```{r}
+table(data$Supplier)
+```
+What has been paid out so far in invoices?
+```{r}
+data%>%
+  group_by(Status) %>%
+  filter(Status=="FULFILLED")%>%
+summarise(total_spent = sum(Total_product_afl))
+```
+Per product What has been ordered?
+```{r}
+data%>%
+  group_by(Product) %>%
+summarise(Volume = sum(Volume))
+```
+
